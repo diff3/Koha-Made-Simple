@@ -4,6 +4,11 @@
 - I have only tried this on Intel Mac
 
 Install:
+- Get docker from: https://www.docker.com/get-started
+- MacOS:
+  - Install brew (https://brew.sh)
+  - /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  - brew update && brew install git
 - git clone https://github.com/diff3/Koha-Made-Simple
 - cd Koha-Made-Simple
 - docker-compose up

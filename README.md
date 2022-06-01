@@ -16,6 +16,7 @@ localhost:8080
 follow the instructions. Next time you can start koha with docker-compose up -d or from Docker desktop
 
 Opac: localhost
+
 Intra: localhost:8080
 
 You can change instance name and mysql password from .env file

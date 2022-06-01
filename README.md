@@ -6,6 +6,7 @@
 Install:
 - git clone https://github.com/diff3/Koha-Made-Simple
 - cd Koha-Made-Simple
+
 docker-compose up
 
 Wait for everything to be installed. It ends with displaying koha-user and password

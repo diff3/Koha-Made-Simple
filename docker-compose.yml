@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+  koha:
+    # platform: linux/amd64
+    container_name: koha
+    image: koha:latest
+    hostname: koha
+    build: .
+    env_file: .env
+    tty: true
+    cap_add:
+      - SYS_NICE
+      - DAC_READ_SEARCH
+    ports:
+      - "80:80"
+      - "210:210"
+      - "3306:3306"
+      - "8080:8080"
+      - "11211:11211"
+    environment:
+      - LIBRARY=${LIBRARY}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    restart: always
+
+  # koha-db:
+  #  container_name: koha-db
+  #  image: koha-db:latest
+  #  hostname: mariadb
+  #  build: mariadb
+
+  # koha-zebra:
+  # koha-memcached:
+  #  container_name: koha-memcached
+  #  image: koha-memcached:latest
+  #  hostname: koha-memcached
+#    build: memcached
+#    ports:
+#      - "11211:11211"
+#    restart: always
+
+# koha-elasticsearch
+
+networks:
+  default:
+    name: koha-network

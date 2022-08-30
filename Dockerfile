@@ -10,7 +10,7 @@ ENV LANG sv_SE.UTF-8
 ENV LANGUAGE sv_SE.UTF-8
 ENV TZ=Europe/Stockholm
 
-RUN apt-get update && apt-get -f -y -q --no-install-recommends install wget gnupg locales apache2 mariadb-server ca-certificates
+RUN apt-get update && apt-get -f -y -q --no-install-recommends install wget gnupg locales apache2  ca-certificates
 RUN locale-gen sv_SE.UTF-8
 
 RUN a2dismod mpm_event
@@ -21,6 +21,13 @@ RUN apt-get install -f -y -q --no-install-recommends koha-common
 
 
 COPY entry.sh /
+COPY koha_template.sql /etc
+
+# Add docker-compose-wait tool -------------------
+ENV WAIT_VERSION 2.7.2
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/$WAIT_VERSION/wait /wait
+RUN chmod +x /wait
+
 RUN chmod +x /entry.sh
 
 CMD /entry.sh

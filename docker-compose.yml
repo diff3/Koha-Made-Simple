@@ -1,33 +1,58 @@
 version: '3.9'
 
+x-koha-shared-conf: &koha-shared-conf
+  environment:
+    - KOHA_INSTANCE_NAME=${KOHA_INSTANCE_NAME}
+    - KOHA_INITIAL_ADMIN_NAME=${KOHA_INITIAL_ADMIN_NAME}
+    - KOHA_INITIAL_ADMIN_PASS=${KOHA_INITIAL_ADMIN_PASS}
+    - KOHA_STAGE_TYPE=${KOHA_STAGE_TYPE}
+    - KOHA_OPAC_URL=${KOHA_OPAC_URL}
+    - DB_SERVER=${DB_SERVER}
+    - DB_PORT=${DB_PORT}
+    - DB_ADMIN_USER=${DB_ADMIN_USER}
+    - DB_ADMIN_PASS=${DB_ADMIN_PASS}
+    - DB_NAME=${DB_NAME}
+    - DB_PASS=${DB_PASS}
+    - DB_USER=${DB_USER}
+    - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+
+
 services:
   koha:
+    <<: *koha-shared-conf
     # platform: linux/amd64
     container_name: koha
     image: koha:latest
     hostname: koha
     build: .
-    env_file: .env
     tty: true
     cap_add:
       - SYS_NICE
       - DAC_READ_SEARCH
     ports:
-      - "80:80"
+      - "81:80"
       - "210:210"
-      - "3306:3306"
-      - "8080:8080"
+      - "8081:8080"
       - "11211:11211"
+    depends_on:
+      - koha-db
+    command: sh -c "/wait && /entry.sh"
     environment:
-      - LIBRARY=${LIBRARY}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - WAIT_HOSTS=koha-db:3306
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=30
+      - WAIT_HOST_CONNECT_TIMEOUT=20
     restart: always
 
-  # koha-db:
-  #  container_name: koha-db
-  #  image: koha-db:latest
-  #  hostname: mariadb
-  #  build: mariadb
+  koha-db:
+    <<: *koha-shared-conf
+    container_name: koha-db
+    image: koha-db:latest
+    hostname: mariadb
+    build: mariadb
+    ports:
+      - "3308:3306"
+    restart: always
 
   # koha-zebra:
   # koha-memcached:

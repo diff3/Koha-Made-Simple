@@ -2,12 +2,15 @@
 
 if [ ! -f /etc/configured ]; then
    # Koha basic config
+   echo "Waiting for MariaDB" 
+   sleep 10
+   
 
    sed -i 's/DOMAIN=".myDNSname.org"/DOMAIN=""/' /etc/koha/koha-sites.conf
    sed -i 's/INTRAPORT="80"/INTRAPORT="8080"/' /etc/koha/koha-sites.conf
    sed -i 's/INTRASUFFIX="-intra"/INTRASUFFIX=""/' /etc/koha/koha-sites.conf
 
-   # sed -i 's/MEMCACHED_SERVERS="127.0.0.1:11211"/"MEMCACHED_SERVERS="koha-memcached:11211"/g' /etc/koha/koha-sites.conf
+   sed -i 's/MEMCACHED_SERVERS="127.0.0.1:11211"/MEMCACHED_SERVERS="koha-memcached:11211"/g' /etc/koha/koha-sites.conf
 
    grep -qxF 'Listen 8080' /etc/apache2/ports.conf || echo "Listen 8080" >> /etc/apache2/ports.conf
    grep -qxF 'ServerName 127.0.0.1' /etc/apache2/apache2.conf || echo "ServerName 127.0.0.1" >> /etc/apache2/apache2.conf
@@ -33,17 +36,18 @@ if [ ! -f /etc/configured ]; then
    koha-plack --start $KOHA_INSTANCE_NAME
 
    service apache2 restart
-   service memcached restart
+#   service memcached restart
    service koha-common restart
 
    # om man får felmeddelande på timezone kan man använda detta
    # mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql -p
 
    koha-foreach --chdir --enabled /usr/share/koha/bin/devel/create_superlibrarian.pl --userid $KOHA_INITIAL_ADMIN_NAME --password $KOHA_INITIAL_ADMIN_PASS --branchcode Q --categorycode S --cardnumber 1
+   echo "Done configure"
    touch /etc/configured
 else
    /etc/init.d/apache2 start
-   /etc/init.d/memcached start
+ #  /etc/init.d/memcached start
    /etc/init.d/koha-common start
 fi
 

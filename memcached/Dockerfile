@@ -1,7 +1,7 @@
-FROM debian:bullseye
-
 FROM alpine:latest
 
-RUN apk update && apk --no-cache add memcached
+COPY entry.sh /
+RUN apk update && apk --no-cache add memcached && chmod +x /entry.sh
 
-CMD /etc/inid.d/memcached start
+USER memcached
+CMD ["/entry.sh"]

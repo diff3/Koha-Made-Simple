@@ -33,15 +33,9 @@ services:
       - "81:80"
       - "210:210"
       - "8081:8080"
-      - "11211:11211"
     depends_on:
       - koha-db
-    command: sh -c "/wait && /entry.sh"
-    environment:
-      - WAIT_HOSTS=koha-db:3306
-      - WAIT_HOSTS_TIMEOUT=300
-      - WAIT_SLEEP_INTERVAL=30
-      - WAIT_HOST_CONNECT_TIMEOUT=20
+
     restart: always
 
   koha-db:
@@ -55,15 +49,15 @@ services:
     restart: always
 
   # koha-zebra:
-  # koha-memcached:
-  #  container_name: koha-memcached
-  #  image: koha-memcached:latest
-  #  hostname: koha-memcached
-#    build: memcached
-#    ports:
-#      - "11211:11211"
-#    restart: always
-
+  koha-memcached:
+    container_name: koha-memcached
+    image: koha-memcached:latest
+    hostname: koha-memcached
+    build: memcached
+    tty: true
+    ports:
+      - "11211:11211"
+    restart: always
 # koha-elasticsearch
 
 networks:

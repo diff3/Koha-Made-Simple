@@ -1,4 +1,4 @@
 CREATE DATABASE koha;
-CREATE USER 'koha'@'%' IDENTIFIED BY 'koha';
-grant all privileges on koha.* TO 'koha'@'%' identified by 'koha'";
+CREATE USER 'user'@'%' IDENTIFIED BY 'koha';
+grant all privileges on koha.* TO 'user'@'%' identified by 'koha';
 FLUSH PRIVILEGES;

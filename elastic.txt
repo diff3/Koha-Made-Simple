@@ -1,0 +1,6 @@
+ <elasticsearch>
+     <server>some.other.network:9200</server>  <!-- may be repeated to include all servers on your cluster -->
+     <index_name>koha_robin</index_name>       <!-- should be unique amongst all the indices on your cluster. _biblios and _authorities will be appended. -->
+     <client>6_0::Direct</client>              <!-- Client version to use -->
+     <cxn_pool>Static</cxn_pool>               <!-- Use Static connection pool (see https://metacpan.org/pod/Search::Elasticsearch#cxn_pool for more information) -->
+ </elasticsearch>

@@ -36,7 +36,6 @@ if [ ! -f /etc/configured ]; then
    koha-plack --start $KOHA_INSTANCE_NAME
 
    service apache2 restart
-#   service memcached restart
    service koha-common restart
 
    # om man får felmeddelande på timezone kan man använda detta
@@ -47,8 +46,8 @@ if [ ! -f /etc/configured ]; then
    touch /etc/configured
 else
    /etc/init.d/apache2 start
- #  /etc/init.d/memcached start
    /etc/init.d/koha-common start
+   echo "Koha started"
 fi
 
 /bin/bash

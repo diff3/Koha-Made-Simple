@@ -24,7 +24,10 @@ services:
     container_name: koha
     image: koha:latest
     hostname: koha
-    build: .
+    build:
+      context: .
+      args:
+        - KOHA_DEB_REPOSITORY=${KOHA_DEB_REPOSITORY}
     tty: true
     cap_add:
       - SYS_NICE
@@ -58,7 +61,28 @@ services:
     ports:
       - "11211:11211"
     restart: always
-# koha-elasticsearch
+
+  koha-elasticsearch:
+    container_name: koha-elasticsearch
+    image: blacktop/elasticsearch:6.8
+    hostname: koha-elasticsearch
+    tty: true
+    ports: 
+      - "9200-9300"
+      - "9300-9400"
+    restart: always
+
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - "8888:80"
+    environment:
+      - PMA_HOST=${DB_SERVER}
+      - PMA_USER=${DB_ADMIN_USER}
+      - PMA_PASSWORD=${DB_ADMIN_PASS}
+    restart: "no"
+    profiles:
+      - dev
 
 networks:
   default:

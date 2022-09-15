@@ -1,3 +1,0 @@
-- extern apache2 install. chared space? 
-- install different koha versions. perhaps relocate koha install to entry
-- check if zebra dn elasticsearch can have different installations. 

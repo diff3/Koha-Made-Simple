@@ -16,7 +16,6 @@ x-koha-shared-conf: &koha-shared-conf
     - DB_USER=${DB_USER}
     - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
 
-
 services:
   koha:
     <<: *koha-shared-conf
@@ -33,9 +32,9 @@ services:
       - SYS_NICE
       - DAC_READ_SEARCH
     ports:
-      - "81:80"
+      - "80:80"
       - "210:210"
-      - "8081:8080"
+      - "8080:8080"
     depends_on:
       - koha-db
 
@@ -48,7 +47,7 @@ services:
     hostname: mariadb
     build: mariadb
     ports:
-      - "3308:3306"
+      - "3303:3306"
     restart: always
 
   # koha-zebra:
@@ -62,15 +61,15 @@ services:
       - "11211:11211"
     restart: always
 
-  koha-elasticsearch:
-    container_name: koha-elasticsearch
-    image: blacktop/elasticsearch:6.8
-    hostname: koha-elasticsearch
-    tty: true
-    ports: 
-      - "9200-9300"
-      - "9300-9400"
-    restart: always
+#  koha-elasticsearch:
+#    container_name: koha-elasticsearch
+#    image: blacktop/elasticsearch:6.8
+#    hostname: koha-elasticsearch
+#    tty: true
+#    ports: 
+#      - "9200:9200"
+#      - "9300:9300"
+#    restart: always
 
   phpmyadmin:
     image: phpmyadmin

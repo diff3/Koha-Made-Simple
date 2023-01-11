@@ -1,20 +1,22 @@
 version: '3.9'
 
 x-koha-shared-conf: &koha-shared-conf
-  environment:
-    - KOHA_INSTANCE_NAME=${KOHA_INSTANCE_NAME}
-    - KOHA_INITIAL_ADMIN_NAME=${KOHA_INITIAL_ADMIN_NAME}
-    - KOHA_INITIAL_ADMIN_PASS=${KOHA_INITIAL_ADMIN_PASS}
-    - KOHA_STAGE_TYPE=${KOHA_STAGE_TYPE}
-    - KOHA_OPAC_URL=${KOHA_OPAC_URL}
-    - DB_SERVER=${DB_SERVER}
-    - DB_PORT=${DB_PORT}
-    - DB_ADMIN_USER=${DB_ADMIN_USER}
-    - DB_ADMIN_PASS=${DB_ADMIN_PASS}
-    - DB_NAME=${DB_NAME}
-    - DB_PASS=${DB_PASS}
-    - DB_USER=${DB_USER}
-    - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+  env_file:
+    - ./env/koha.env
+      #  environment:
+    # - KOHA_INSTANCE_NAME=${KOHA_INSTANCE_NAME}
+    # - KOHA_INITIAL_ADMIN_NAME=${KOHA_INITIAL_ADMIN_NAME}
+    # - KOHA_INITIAL_ADMIN_PASS=${KOHA_INITIAL_ADMIN_PASS}
+    # - KOHA_STAGE_TYPE=${KOHA_STAGE_TYPE}
+    # - KOHA_OPAC_URL=${KOHA_OPAC_URL}
+    # - DB_SERVER=${DB_SERVER}
+    # - DB_PORT=${DB_PORT}
+    # - DB_ADMIN_USER=${DB_ADMIN_USER}
+    # - DB_ADMIN_PASS=${DB_ADMIN_PASS}
+    # - DB_NAME=${DB_NAME}
+    # - DB_PASS=${DB_PASS}
+    # - DB_USER=${DB_USER}
+    # - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
 
 services:
   koha:
@@ -24,7 +26,7 @@ services:
     image: koha:latest
     hostname: koha
     build:
-      context: .
+      context: containers/koha
       args:
         - KOHA_DEB_REPOSITORY=${KOHA_DEB_REPOSITORY}
     tty: true
@@ -45,7 +47,7 @@ services:
     container_name: koha-db
     image: koha-db:latest
     hostname: mariadb
-    build: mariadb
+    build: containers/mariadb
     ports:
       - "3303:3306"
     restart: always
@@ -55,30 +57,45 @@ services:
     container_name: koha-memcached
     image: koha-memcached:latest
     hostname: koha-memcached
-    build: memcached
+    build: containers/memcached
     tty: true
     ports:
-      - "11211:11211"
+     - "11211:11211"
     restart: always
 
-#  koha-elasticsearch:
-#    container_name: koha-elasticsearch
-#    image: blacktop/elasticsearch:6.8
-#    hostname: koha-elasticsearch
-#    tty: true
-#    ports: 
-#      - "9200:9200"
-#      - "9300:9300"
-#    restart: always
+  koha-elasticsearch:
+    container_name: koha-elasticsearch
+    image: koha-eleasticsearch:6.8
+    hostname: koha-elasticsearch
+    build: containers/elasticsearch
+    tty: true
+    environment:
+      - node.name=es01
+      # - cluster.name=es-docker-cluster
+      # - discovery.seed_hosts=es02,es03
+      # - cluster.initial_master_nodes=es01,es02,es03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports: 
+      - "9200:9200"
+      - "9300:9300"
+    restart: always
+    profiles:
+      - elastic
 
   phpmyadmin:
+    <<: *koha-shared-conf
     image: phpmyadmin
     ports:
-      - "8888:80"
-    environment:
-      - PMA_HOST=${DB_SERVER}
-      - PMA_USER=${DB_ADMIN_USER}
-      - PMA_PASSWORD=${DB_ADMIN_PASS}
+     - "8888:80"
+    #environment:
+    #  - PMA_HOST=${DB_SERVER}
+    #  - PMA_USER=${DB_ADMIN_USER}
+    #  - PMA_PASSWORD=${DB_ADMIN_PASS}
     restart: "no"
     profiles:
       - dev
@@ -86,3 +103,6 @@ services:
 networks:
   default:
     name: koha-network
+  # koha-network:
+  # external: true
+  # name: host

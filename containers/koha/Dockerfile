@@ -1,4 +1,4 @@
-FROM debian:bullseye
+FROM debian:bullseye-slim
 
 LABEL version="0.5"
 LABEL description="Koha docker image"
@@ -7,10 +7,10 @@ ARG DEBIAN_FRONTEND="noninteractive"
 ARG KOHA_DEB_REPOSITORY
 RUN echo $KOHA_DEB_REPOSITORY
 
-ENV LC_ALL sv_SE.UTF-8
-ENV LANG sv_SE.UTF-8
-ENV LANGUAGE sv_SE.UTF-8
-ENV TZ=Europe/Stockholm
+# ENV LC_ALL sv_SE.UTF-8
+# ENV LANG sv_SE.UTF-8
+# ENV LANGUAGE sv_SE.UTF-8
+# ENV TZ=Europe/Stockholm
 
 RUN apt-get update && apt-get -f -y -q --no-install-recommends install wget gnupg locales apache2  ca-certificates
 RUN locale-gen sv_SE.UTF-8
@@ -23,8 +23,7 @@ RUN echo "deb [signed-by=/usr/share/keyrings/koha-keyring.gpg] $KOHA_DEB_REPOSIT
 
 RUN apt-get install -f -y -q --no-install-recommends koha-common
 
-COPY entry.sh /
+COPY --chmod=755 entry.sh /
 COPY koha_template.sql /etc
 
-RUN chmod +x /entry.sh
 CMD /entry.sh

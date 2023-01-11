@@ -3,20 +3,6 @@ version: '3.9'
 x-koha-shared-conf: &koha-shared-conf
   env_file:
     - ./env/koha.env
-      #  environment:
-    # - KOHA_INSTANCE_NAME=${KOHA_INSTANCE_NAME}
-    # - KOHA_INITIAL_ADMIN_NAME=${KOHA_INITIAL_ADMIN_NAME}
-    # - KOHA_INITIAL_ADMIN_PASS=${KOHA_INITIAL_ADMIN_PASS}
-    # - KOHA_STAGE_TYPE=${KOHA_STAGE_TYPE}
-    # - KOHA_OPAC_URL=${KOHA_OPAC_URL}
-    # - DB_SERVER=${DB_SERVER}
-    # - DB_PORT=${DB_PORT}
-    # - DB_ADMIN_USER=${DB_ADMIN_USER}
-    # - DB_ADMIN_PASS=${DB_ADMIN_PASS}
-    # - DB_NAME=${DB_NAME}
-    # - DB_PASS=${DB_PASS}
-    # - DB_USER=${DB_USER}
-    # - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
 
 services:
   koha:
@@ -39,7 +25,6 @@ services:
       - "8080:8080"
     depends_on:
       - koha-db
-
     restart: always
 
   koha-db:
@@ -80,7 +65,7 @@ services:
       memlock:
         soft: -1
         hard: -1
-    ports: 
+    ports:
       - "9200:9200"
       - "9300:9300"
     restart: always
@@ -92,10 +77,6 @@ services:
     image: phpmyadmin
     ports:
      - "8888:80"
-    #environment:
-    #  - PMA_HOST=${DB_SERVER}
-    #  - PMA_USER=${DB_ADMIN_USER}
-    #  - PMA_PASSWORD=${DB_ADMIN_PASS}
     restart: "no"
     profiles:
       - dev
@@ -103,6 +84,3 @@ services:
 networks:
   default:
     name: koha-network
-  # koha-network:
-  # external: true
-  # name: host

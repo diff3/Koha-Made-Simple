@@ -1,6 +1,6 @@
 FROM debian:bullseye-slim
 
-LABEL version="0.5"
+LABEL version="0.7"
 LABEL description="Koha docker image"
 
 ARG DEBIAN_FRONTEND="noninteractive"
@@ -26,4 +26,4 @@ RUN apt-get install -f -y -q --no-install-recommends koha-common
 COPY --chmod=755 entry.sh /
 COPY koha_template.sql /etc
 
-CMD /entry.sh
+ENTRYPOINT [ "/entry.sh" ]

@@ -9,4 +9,3 @@
   --threads=${MEMCACHED_THREADS:-4} \
   --max-reqs-per-event=${MEMCACHED_REQUESTS_PER_EVENT:-20} \
   --verbose
-

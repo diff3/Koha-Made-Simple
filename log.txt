@@ -1,0 +1,2 @@
+User Input: list
+Response: There are 1 of a max of 20 players online: Java_EditionXD

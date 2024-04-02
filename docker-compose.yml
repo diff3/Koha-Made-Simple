@@ -22,7 +22,9 @@ services:
     ports:
       - "80:80"
       - "210:210"
+      - "443:443"
       - "8080:8080"
+      - "9443:8443"
     depends_on:
       - koha-db
     restart: always
